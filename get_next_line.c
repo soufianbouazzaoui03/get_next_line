@@ -1,50 +1,5 @@
 #include "get_next_line.h"
 
-int ft_checknull(t_list *list)
-{
-    int i;
-
-    if(!list)
-        return (0);
-    while(list)
-    {
-        i = 0;
-        while(list->val[i] && i < BUFFER_SIZE)
-        {
-            if(list->val[i] == '\n')
-                return (1);
-            ++i;
-        }
-        list = list->next;
-    }
-    return (0);
-}
-
-size_t  bufflen(t_list *list)
-{
-    size_t  len;
-    size_t  i;
-
-    if(!list)
-        return (0);
-    len = 0;
-    while(list)
-    {
-        i = 0;
-        while(list->val[i])
-        {
-            if(list->val[i] == '\n')
-            {
-                ++len;
-                return (len);
-            }
-            ++len;
-            ++i;
-        }
-        list = list->next;
-    }
-    return (len);
-}
 void    setlist(t_list **list, int fd)
 {
     char    *buffer;
@@ -62,28 +17,26 @@ void    setlist(t_list **list, int fd)
             return ;
         }
         buffer[rd] = '\0';
-        ft_lstaddback(list, ft_lstnew(strdup(buffer)));
+        ft_lstaddback(list, ft_lstnew(ft_strdup(buffer)));
         free(buffer);
     }
 }
-char    *ft_getline(t_list *list)
+char    *ft_getline(t_list *list, size_t len)
 {
     char    *line;
-    size_t  len;
     int     i;
     int     j;
 
     i = 0;
-    len = bufflen(list);
     line = malloc(len + 1);
-    if(!line)
+    if (!line)
         return (NULL);
-    while(list)
+    while (list)
     {
         j = 0;
-        while(list->val[j])
+        while (list->val[j])
         {
-            if(list->val[j] == '\n')
+            if (list->val[j] == '\n')
             {
                 line[i++] = '\n';
                 line[i] = '\0';
@@ -167,7 +120,7 @@ char    *get_next_line(int fd)
     setlist(&list, fd);
     if(!list)
         return (NULL);
-    line = ft_getline(list);
+    line = ft_getline(list,bufflen(list));
     ft_clean(&list);
     return (line);
 }
@@ -177,13 +130,17 @@ char    *get_next_line(int fd)
 	
 //     printf("1%s", get_next_line(fd));
 //     printf("2%s", get_next_line(fd));
+//     printf("1%s", get_next_line(fd));
+//     printf("2%s", get_next_line(fd));
+//     printf("1%s", get_next_line(fd));
+//     printf("%s", get_next_line(fd));
 // 		// set the next read call to return -1
-//     close(fd);
+//     // close(fd);
     
-//     printf("3%s", get_next_line(fd));
-//     printf("4%s", get_next_line(fd));
-//     fd = open("test.txt", O_RDONLY);
-//     printf("5%s\n", get_next_line(fd));
-//     printf("6%s\n", get_next_line(fd));
+//     // printf("3%s", get_next_line(fd));
+//     // printf("4%s", get_next_line(fd));
+//     // fd = open("test.txt", O_RDONLY);
+//     // printf("5%s", get_next_line(fd));
+//     // printf("6%s", get_next_line(fd));
 // }
   
